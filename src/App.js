@@ -10,7 +10,6 @@ const testUsers = [
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [loggedInUsers, setLoggedInUsers] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
 
   const handleSubmit = (event) => {
@@ -23,17 +22,10 @@ const App = () => {
         ...prevRecentActivity,
       ]);
       alert("This user is already logged in. Please log out before trying to log in again.");
-    } else if (loggedInUsers.some((user) => user.login === login)) {
-      setRecentActivity((prevRecentActivity) => [
-        { login, success: false, type: "login" },
-        ...prevRecentActivity,
-      ]);
-      alert("This user is already logged in. Please log out before trying to log in again.");
-    } else {
+    }  else {
       const validUser = testUsers.find((user) => user.login === login && user.password === password);
       if (validUser) {
         setCurrentUser({ login, password });
-        setLoggedInUsers((prevLoggedInUsers) => [...prevLoggedInUsers, { login, password }]);
         setRecentActivity((prevRecentActivity) => [
           { login, success: true, type: "login" },
           ...prevRecentActivity,
@@ -51,7 +43,6 @@ const App = () => {
   const handleLogout = (event) => {
     event.preventDefault();
     setCurrentUser(null);
-    setLoggedInUsers((prevLoggedInUsers) => prevLoggedInUsers.filter((user) => user.login !== currentUser.login));
     setRecentActivity((prevRecentActivity) => [
       { login: currentUser.login, success: true, type: "logout" },
       ...prevRecentActivity,
@@ -70,7 +61,6 @@ const App = () => {
         <LoginForm currentUser={currentUser}
           testUsernamesAndPasswords={testUsers}
           setCurrentUser={setCurrentUser}
-          loggedInUsers={loggedInUsers}
           onSubmit={handleSubmit}
         />
       )}
